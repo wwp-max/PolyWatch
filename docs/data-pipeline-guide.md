@@ -772,7 +772,7 @@ data_pipeline/
 │   ├── fetcher.py              # API 请求层：resolve_token_id, fetch_price_history
 │   ├── db.py                   # 数据库操作层：upsert_market, insert_price_rows, get_latest_timestamp
 │   └── main.py                 # 主入口：TRACKED_MARKETS 配置 + 调度循环
-└── README.md                   # 本文档
+└── README.md                   # 英文快速参考
 
 tests/data_pipeline/
 ├── test_fetcher.py             # 6 个单元测试（mock HTTP）

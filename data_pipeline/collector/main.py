@@ -8,17 +8,25 @@ from fetcher import resolve_token_id, fetch_price_history
 from db import get_connection, upsert_market, insert_price_rows, get_latest_timestamp
 
 # ── Markets to monitor ──────────────────────────────────────────────────────
-# Add/remove slugs here to change which markets are tracked.
+# Selection rationale (per project spec):
+#   - 1 closed market for backtesting / algorithm training
+#   - 2 active high-liquidity markets for live monitoring
 TRACKED_MARKETS = [
+    # Closed — used for backtesting (2024 US election, settled Nov 2024)
     "presidential-election-winner-2024",
-    "will-there-be-a-us-recession-in-2025",
-    "super-bowl-lix-winner",
+    # Active — geopolitical (Russia-Ukraine ceasefire, price ~0.58, ends 2026-07)
+    "what-will-happen-before-gta-vi",
+    # Active — US policy (Trump Greenland acquisition, price ~0.11, ends 2026-12)
+    "will-trump-acquire-greenland-before-2027",
 ]
 
 POLL_INTERVAL = int(os.environ.get("POLL_INTERVAL_SECONDS", "300"))
 
 # How far back to fetch if a market has never been seen before (days)
 INITIAL_LOOKBACK_DAYS = 30
+
+# CLOB API rejects requests with interval > ~7 days; chunk accordingly
+FETCH_CHUNK_DAYS = 6
 
 
 def collect_once():
@@ -56,9 +64,21 @@ def collect_once():
                     print(f"[collector] {slug}: already up to date.")
                     continue
 
-                rows = fetch_price_history(token_id, start_ts, end_ts)
-                inserted = insert_price_rows(conn, token_id, rows)
-                print(f"[collector] {slug}: fetched {len(rows)} points, inserted {inserted} new rows.")
+                # Fetch in chunks to stay within CLOB API's interval limit (~7 days)
+                chunk_secs = FETCH_CHUNK_DAYS * 86400
+                total_fetched = 0
+                total_inserted = 0
+                cursor = start_ts
+                while cursor < end_ts:
+                    chunk_end = min(cursor + chunk_secs, end_ts)
+                    rows = fetch_price_history(token_id, cursor, chunk_end)
+                    if rows:
+                        inserted = insert_price_rows(conn, token_id, rows)
+                        total_fetched += len(rows)
+                        total_inserted += inserted
+                    cursor = chunk_end + 1
+
+                print(f"[collector] {slug}: fetched {total_fetched} points, inserted {total_inserted} new rows.")
 
             except Exception as e:
                 print(f"[collector] Error processing {slug}: {e}")
