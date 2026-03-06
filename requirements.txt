@@ -1,3 +1,6 @@
 py-clob-client
 requests
 pandas
+psycopg2-binary
+schedule
+numpy
