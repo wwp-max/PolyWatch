@@ -1,0 +1,31 @@
+# data_pipeline/docker-compose.yml
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB:       polywatch
+      POSTGRES_USER:     polywatch
+      POSTGRES_PASSWORD: polywatch
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U polywatch -d polywatch"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  collector:
+    build: ./collector
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://polywatch:polywatch@timescaledb:5432/polywatch
+      POLL_INTERVAL_SECONDS: "300"
+    restart: unless-stopped
+
+volumes:
+  timescale_data:
