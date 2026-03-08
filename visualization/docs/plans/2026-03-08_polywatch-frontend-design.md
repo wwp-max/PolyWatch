@@ -1,10 +1,5 @@
 # PolyWatch Frontend Design Document
 
-> Date: 2026-03-08
-> Last Updated: 2026-03-08
-> Status: **Implemented** — all sections below reflect the current codebase.
-> Author: Frontend Team (AI-assisted)
-
 ---
 
 ## 1. Context
