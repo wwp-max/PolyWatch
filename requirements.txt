@@ -4,3 +4,9 @@ pandas
 psycopg2-binary
 schedule
 numpy
+scipy
+matplotlib
+jupyter
+pytest
+flask
+flask-cors
