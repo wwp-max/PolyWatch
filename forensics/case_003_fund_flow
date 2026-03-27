@@ -1,0 +1,6 @@
+digraph fund_flow {
+	rankdir=LR
+	mixer_wallet -> wallet_5 [label="700 USDC"]
+	wallet_5 -> wallet_6 [label="300 USDC"]
+	wallet_6 -> polymarket_contract [label="280 USDC"]
+}

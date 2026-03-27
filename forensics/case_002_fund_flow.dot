@@ -1,0 +1,12 @@
+digraph case_002_greenland {
+rankdir=LR
+label="CASE-002: Greenland Coordinated Rally"
+buyer_cluster [label="Buyer Cluster\n(Coordinated?)" shape=box style=filled fillcolor=lightgreen]
+buyer_large [label="Large Buyer\n(Potential Whale)" shape=box style=filled fillcolor=darkgreen]
+greenland_clob [label="Greenland CLOB" shape=ellipse style=filled fillcolor=lightblue]
+price_beneficiary [label="Existing Holders\nGain $" shape=box style=filled fillcolor=lightgreen]
+buyer_large -> greenland_clob [label="Buy Orders\n(0.108->0.116)" color=green penwidth=3]
+buyer_cluster -> greenland_clob [label="Supporting Buys" color=lightgreen penwidth=2]
+greenland_clob -> price_beneficiary [label="Price Rise +7.4%" color=green]
+}
+

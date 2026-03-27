@@ -1,0 +1,14 @@
+digraph case_003_presidential {
+rankdir=LR
+label="CASE-003: Presidential Market Event-Driven Drop"
+event_catalyst [label="Public Event\n(Biden debate concern)" shape=note style=filled fillcolor=yellow]
+broad_sellers [label="Distributed Sellers\n(Market Participants)" shape=box style=filled fillcolor=orange]
+media [label="News/Media\nAmplification" shape=note style=filled fillcolor=lightyellow]
+presidential_clob [label="Presidential CLOB\n(High Liquidity)" shape=ellipse style=filled fillcolor=lightblue penwidth=3]
+biden_holders_loss [label="Biden Position Holders\nTake Losses" shape=box style=filled fillcolor=pink]
+event_catalyst -> media [label="Event occurs"]
+media -> broad_sellers [label="Inform traders"]
+broad_sellers -> presidential_clob [label="Sell Orders\n(0.58->0.68)" color=blue penwidth=2]
+presidential_clob -> biden_holders_loss [label="Price Drop -5.06%" color=blue]
+}
+
