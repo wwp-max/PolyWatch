@@ -1,0 +1,6 @@
+digraph fund_flow {
+	rankdir=LR
+	cex_wallet -> wallet_1 [label="1200 USDC"]
+	wallet_1 -> wallet_2 [label="600 USDC"]
+	wallet_2 -> polymarket_contract [label="580 USDC"]
+}

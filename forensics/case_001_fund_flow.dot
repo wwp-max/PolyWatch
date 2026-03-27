@@ -1,0 +1,10 @@
+digraph case_001_gta_vi {
+rankdir=LR
+label="CASE-001: GTA-VI Sudden Collapse"
+seller_downward [label="Seller Orders" shape=box style=filled fillcolor=red]
+gta_clob [label="GTA-VI CLOB" shape=ellipse style=filled fillcolor=lightblue]
+buyer_loss [label="Buyers Holding\nLosses" shape=box style=filled fillcolor=pink]
+seller_downward -> gta_clob [label="Sell (0.5450->0.5350)" color=red penwidth=3]
+gta_clob -> buyer_loss [label="Price Drop -1.84%" color=red]
+}
+
