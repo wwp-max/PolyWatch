@@ -1,111 +1,102 @@
 # PolyWatch
 
-**PolyWatch** 是一个面向 Polymarket 预测市场的市场完整性监测系统，用于检测价格操纵（Pump & Dump）、异常波动及可疑交易行为。
+**PolyWatch** 是一个面向 Polymarket 预测市场的市场完整性监测系统，用于检测价格操纵、异常波动及可疑交易行为。
 
-> Course: CS6290 Privacy-Enhancing Technologies | Group 16 | CityU Hong Kong
-
----
-
-## 项目目标
-
-通过对 Polymarket 实时价格数据进行采集、存储与分析，识别潜在的市场操纵信号，为去中心化预测市场生态提供透明度与安全洞察。
+> Course: CS6290 Privacy-Enhancing Technologies | Group 16
 
 ---
 
-## 目录结构
-
-```
-PolyWatch/
-├── data_pipeline/          # M2：数据采集管道（TimescaleDB + Docker）
-│   ├── collector/          #   自动采集器（Python）
-│   │   ├── main.py         #   调度主入口，TRACKED_MARKETS 配置
-│   │   ├── fetcher.py      #   Polymarket API 请求层
-│   │   └── db.py           #   数据库写入层（幂等）
-│   ├── db/
-│   │   ├── init.sql        #   数据库 schema
-│   │   └── price_history_seed.csv  # 历史种子数据（10,564 条）
-│   ├── docker-compose.yml  #   服务编排
-│   └── README.md           #   数据管道完整操作手册（中文）
-├── core_analysis/          # M3+：异常检测算法（Z-Score、Whale Alert 等）
-├── data_ingestion/         # 早期数据摄取模块（已被 data_pipeline 取代）
-├── forensics/              # 取证分析模块
-├── docs/                   # 项目文档
-│   └── data-pipeline-guide.md  # 数据管道手册（同 data_pipeline/README.md）
-├── tests/
-│   └── data_pipeline/      # 自动化测试（13个：6单元 + 7集成）
-├── requirements.txt
-└── README.md               # 本文件
-```
-
----
-
-## 快速开始
-
-### 前置条件
-
-- Docker Desktop（含 WSL2 集成）已安装并运行
-- Python 3.10+
-
-### 启动数据管道
+## 快速启动
 
 ```bash
-cd data_pipeline
+git clone https://github.com/wwp-max/PolyWatch.git
+cd PolyWatch/data_pipeline
 docker compose up -d
 docker compose logs -f collector
 ```
 
-**首次启动需导入历史种子数据**，详见 [`data_pipeline/README.md`](data_pipeline/README.md) 第 3 节。
+**首次启动需导入种子数据：** Collector 自动回溯30天。对于已结束的市场（如 2024 大选），必须手动导入 `db/price_history_seed.csv`。详见 [`data_pipeline/README.md`](data_pipeline/README.md) 第 3 节。
 
-### 连接数据库
+### 前置条件
 
+- Docker Desktop（含 WSL2 集成）
+- Python 3.10+
+
+---
+
+## 数据库连接
+
+| 项 | 值 |
+|---|---|
+| Host | `localhost` |
+| Port | **5433**（不是默认 5432） |
+| Database | `polywatch` |
+| User | `polywatch` |
+| Password | `polywatch` |
+
+```python
+# Python 直接连接
+import psycopg2
+conn = psycopg2.connect("postgresql://polywatch:polywatch@localhost:5433/polywatch")
 ```
-postgresql://polywatch:polywatch@localhost:5433/polywatch
-```
 
-### 运行测试
-
-```bash
-DATABASE_URL=postgresql://polywatch:polywatch@localhost:5433/polywatch \
-pytest tests/ -v
-```
+DBeaver、psql 等工具均可使用上述连接。
 
 ---
 
 ## 当前数据
 
-| 市场 | 用途 | 数据量 |
-|------|------|--------|
-| `presidential-election-winner-2024` | 算法回测（已结束）| 7,356 条（2024-01-05 ~ 2024-11-06）|
-| `what-will-happen-before-gta-vi` | 实时监控（俄乌停火）| ~720 条，持续更新 |
-| `will-trump-acquire-greenland-before-2027` | 实时监控（特朗普政策）| ~710 条，持续更新 |
+| 市场 | 用途 | 数据量 | 状态 |
+|------|------|--------|------|
+| `presidential-election-winner-2024` | 算法回测 | 7,356 条（2024-01-05 ~ 2024-11-06）| 已结束 |
+| `what-will-happen-before-gta-vi` | 实时监控 | ~780 条 | 持续更新 |
+| `will-trump-acquire-greenland-before-2027` | 实时监控 | ~770 条 | 持续更新 |
+| `fed-decision-in-march-885` | 元数据 | 720 条 | — |
+| `presidential-election-winner-2028` | 元数据 | 331 条 | — |
+| `democratic-presidential-nominee-2028` | 元数据 | 719 条 | — |
 
 ---
 
-## 模块说明
+## 数据相关模块
 
-### data_pipeline（M2，已完成）
+### data_pipeline
 
 自动化数据采集管道，每 5 分钟从 Polymarket CLOB API 拉取价格数据，写入 TimescaleDB。
-详见 [data_pipeline/README.md](data_pipeline/README.md)。
+详见 [`data_pipeline/README.md`](data_pipeline/README.md)。
 
-### core_analysis（M3+，进行中）
+### core_analysis / db_interface
 
-异常检测算法模块，包含：
-- Z-Score 价格异常检测
-- Whale Alert（大额交易预警）
+共享 DB 读写接口，供所有成员使用：
 
-算法组可通过 `anomaly_events` 表将检测结果写回数据库，供可视化模块读取。
+```python
+from core_analysis.db_interface import get_price_series, write_anomaly, query_anomalies
 
-### forensics（进行中）
+# 读取价格序列
+df = get_price_series("presidential-election-winner-2024")
 
-取证分析模块，用于对历史异常事件进行深入调查和证据归档。
+# 写入异常事件
+write_anomaly(token_id, datetime.now(), "zscore_spike", "high", {"z_score": 4.2})
+
+# 查询异常事件
+anomalies = query_anomalies(slug="presidential-election-winner-2024")
+```
+
+完整文档见 [`core_analysis/README.md`](core_analysis/README.md)。
+
+### 数据质量报告
+
+```bash
+python core_analysis/run_quality_report.py
+```
 
 ---
 
-## 团队
+## 运行测试
 
-| 姓名 | SID | 负责模块 |
-|------|-----|---------|
-| LIN Tao | 59843612 | data_pipeline（M2 负责人）|
+```bash
+source venv/bin/activate
+DATABASE_URL=postgresql://polywatch:polywatch@localhost:5433/polywatch \
+pytest tests/ -v
+```
 
-Course: **CS6290 Privacy-Enhancing Technologies**, CityU Hong Kong
+预期：**38 passed**（data_pipeline 13 + core_analysis 25）
