@@ -1,7 +1,5 @@
 # API Integration Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Replace all mock data with real backend API calls using TanStack React Query, redesigning components to match backend response formats.
 
 **Architecture:** Three-layer data architecture: `lib/api.ts` (pure fetch functions) → `lib/hooks/index.ts` (React Query wrappers) → components. All components switch from synchronous service calls to hook-based async data fetching with automatic caching, loading, and error states.
