@@ -1,0 +1,15 @@
+graph TD
+    API[Polymarket APIs] --> COLLECTOR[collector]
+    COLLECTOR --> DB[(TimescaleDB)]
+
+    DB --> ZS[Z-Score Detector]
+    DB --> BF[Benford Detector]
+    DB --> WH[Whale Alert]
+
+    ZS --> EVENTS[(anomaly_events)]
+    BF --> EVENTS
+    WH --> EVENTS
+
+    EVENTS --> FORENSICS[forensics reports and case studies]
+    EVENTS --> API_SERVER[API server]
+    API_SERVER --> UI[visualization dashboard]
