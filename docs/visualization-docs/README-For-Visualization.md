@@ -2,7 +2,10 @@
 
 PolyWatch is a full-stack application for monitoring price anomalies in [Polymarket](https://polymarket.com/) prediction markets. This repository contains the **frontend**, which provides an interactive dashboard that displays market price trends and detected anomaly events in real time.
 
-This is a README file for directory PolyWatch/visualization (https://github.com/wwp-max/PolyWatch/tree/main/visualization).
+> [!NOTE]
+>
+> This is a README file for directory PolyWatch/visualization.
+> (https://github.com/wwp-max/PolyWatch/tree/main/visualization).
 
 ---
 
@@ -48,44 +51,65 @@ The frontend dashboard allows you to:
 ## Project Structure
 
 ```
-polywatch-frontend/
+visualization/
 ├── app/                        # Next.js App Router pages
 │   ├── layout.tsx              #   Root layout (global providers, fonts, metadata)
-│   ├── page.tsx                #   Main page (dashboard layout)
-│   └── globals.css             #   Global styles + Tailwind theme variables
+│   ├── page.tsx                #   Main dashboard page
+│   ├── globals.css             #   Global styles + Tailwind theme variables
+│   └── favicon.ico             #   Browser tab icon
 │
-├── components/                 # React components
+├── components/                 # Frontend UI components
 │   ├── MarketSidebar.tsx       #   Left sidebar market list (collapsible)
 │   ├── StatsBar.tsx            #   Statistics cards (avg price, data count, time range)
-│   ├── PriceChart.tsx          #   Price trend chart (ECharts, with anomaly markers)
+│   ├── PriceChart.tsx          #   Price trend chart (ECharts, anomaly markers)
 │   ├── AnomalyFeed.tsx         #   Anomaly event list (scrollable, categorized, detailed)
-│   ├── ThemeToggle.tsx         #   Dark/light theme toggle button
-│   └── ui/                     #   shadcn/ui base components (Badge, Card, etc.)
+│   ├── ThemeToggle.tsx         #   Dark/light theme switch
+│   └── ui/                     #   shadcn/ui base components
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── scroll-area.tsx
+│       └── separator.tsx
 │
-├── lib/                        # Core logic library
-│   ├── types.ts                #   TypeScript type definitions (aligned with backend API)
-│   ├── api.ts                  #   Pure fetch functions (wrapping backend API calls)
-│   ├── hooks/index.ts          #   React Query hooks (sole data source for components)
-│   ├── providers.tsx           #   QueryClientProvider wrapper
-│   ├── theme.tsx               #   Theme Context (dark/light mode)
-│   └── utils.ts                #   Utility functions (cn for merging class names)
+├── lib/                        # Frontend core logic and shared modules
+│   ├── types.ts                #   TypeScript types aligned with backend API
+│   ├── api.ts                  #   Pure fetch layer for backend endpoints
+│   ├── providers.tsx           #   React Query QueryClientProvider wrapper
+│   ├── theme.tsx               #   Theme context (dark/light mode)
+│   ├── utils.ts                #   Utility helpers (e.g., className merging)
+│   ├── hooks/
+│   │   └── index.ts            #   React Query hooks (useMarkets/usePriceHistory/...)
+│   ├── services/
+│   │   └── index.ts            #   Deprecated legacy service layer (kept for reference)
+│   └── mock/
+│       └── data.ts             #   Historical mock data (no longer used by runtime)
 │
-├── backend/                    # Backend code (Python Flask + data analysis)
-│   ├── core_analysis/          #   Anomaly detection algorithms + API server
-│   │   ├── api_server.py       #     Flask REST API (entry point for frontend)
-│   │   ├── db_interface.py     #     Database query interface
-│   │   ├── zscore_detector.py  #     Z-Score anomaly detection
-│   │   ├── benford_detector.py #     Benford's Law detection
-│   │   └── whale_alert.py      #     Whale trade detection
-│   ├── data_pipeline/          #   Data collection pipeline
-│   │   ├── docker-compose.yml  #     Docker Compose (TimescaleDB + collector)
-│   │   ├── db/init.sql         #     Database initialization script
-│   │   └── collector/          #     Price data collector (periodically fetches from Polymarket)
-│   └── requirements.txt        #   Python dependencies
+├── public/                     # Static assets served by Next.js
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
 │
-├── .env.local                  # Environment variables (backend API URL, not committed to git)
-├── package.json                # Node.js dependencies and scripts
-└── pnpm-lock.yaml              # Locked dependency versions
+├── backend/                    # Backend code (Flask API + pipeline + analysis)
+│
+├── FILES/                      # Archived planning artifacts for Milestone 2
+│
+├── docs/                       # Planning/design documents
+├── polywatch-frontend/         # Milestone 2 code archive
+├── README.md                   # This document
+├── package.json                # Frontend dependencies and scripts
+├── pnpm-lock.yaml              # Locked Node dependency versions
+├── pnpm-workspace.yaml         # pnpm workspace config
+├── tsconfig.json               # TypeScript config
+├── next.config.ts              # Next.js config
+├── postcss.config.mjs          # PostCSS config
+├── eslint.config.mjs           # ESLint config
+├── components.json             # shadcn/ui config
+├── .gitignore                  # Git ignore rules
+├── findings.md                 # Working notes from integration
+├── progress.md                 # Progress log
+└── task_plan.md                # Task
 ```
 
 ---
