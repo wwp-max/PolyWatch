@@ -1,5 +1,7 @@
 # PolyWatch —— Real-time Anomaly Detection for Prediction Markets
 
+<div style="text-align: center;">Project Repository: https://github.com/wwp-max/PolyWatch</div>
+
 ## 1. Architecture and Specification Governance
 
 ### 1.1 System Overview
@@ -57,7 +59,7 @@ The data infrastructure serves as the foundational backbone of the PolyWatch pla
 
 To ensure the team's algorithms could be tested consistently (supporting the project's empirical analysis requirements), a stable seed dataset (`price_history_seed.csv`) containing 10,564 historical rows across 6 markets was extracted and committed to the repository. This decoupled the core logic development from live data dependencies.
 
-![Data Architecture Diagram](docs/evidence/assets/system-architecture-draft.png)
+![graphviz](./data_pipeline/docs/assets/graphviz.png)
 *(Figure 2.1: PolyWatch Data Architecture and Pipeline Flow)*
 
 ### 2.2 ETL Pipeline Implementation
