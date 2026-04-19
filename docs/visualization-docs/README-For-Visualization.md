@@ -2,7 +2,7 @@
 
 PolyWatch is a full-stack application for monitoring price anomalies in [Polymarket](https://polymarket.com/) prediction markets. This repository contains the **frontend**, which provides an interactive dashboard that displays market price trends and detected anomaly events in real time.
 
-> **Course Project**: CityU Hong Kong — CS6290
+This is a README file for directory PolyWatch/visualization (https://github.com/wwp-max/PolyWatch/tree/main/visualization).
 
 ---
 

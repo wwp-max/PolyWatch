@@ -5,6 +5,7 @@
 The PolyWatch frontend is a single-page analytical dashboard that surfaces Polymarket price history together with the anomaly signals produced by the backend detectors. It is designed as a read-only observatory: an analyst selects a market from the sidebar, inspects its price trajectory, and reviews the structured anomaly events that the backend has flagged on that trajectory. The layout prioritises information density over navigation depth, so that the correspondence between a price movement and its explanation is visible on a single screen.
 
 Source Code Location: https://github.com/wwp-max/PolyWatch/tree/main/visualization
+Docs Location: https://github.com/wwp-max/PolyWatch/tree/main/docs/visualization-docs
 
 ## Technology Stack
 
