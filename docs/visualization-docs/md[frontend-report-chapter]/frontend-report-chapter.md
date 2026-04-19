@@ -15,7 +15,7 @@ The application is built on Next.js 16 with the App Router and React 19, written
 
 The frontend is organised into three well-separated layers. A thin API layer wraps the four backend endpoints — market listing, per-market price history, per-market statistics, and anomaly events — behind typed fetch functions. On top of that, a hooks layer built with TanStack Query exposes one query hook per endpoint and serves as the single data source for all components; no component fetches data directly. The presentation layer is a flat set of four feature components — the market sidebar, statistics bar, price chart, and anomaly feed — composed by a single root page. A dedicated theme provider persists the user's dark/light preference to local storage and exposes it through React context, which the chart consumes to recompute its colour palette.
 
-![Frontend architecture diagram](./assets/Frontend architecture diagram.png)
+![Frontend architecture diagram](./assets/Frontend-architecture-diagram.png)
 
 ## Visualization Dashboard
 
